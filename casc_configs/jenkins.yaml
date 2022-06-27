@@ -1,0 +1,59 @@
+jenkins:
+  systemMessage: "\n\n JENKINS Configuration as A Code !! \n\n"
+
+  numExecutors: 1
+  mode: NORMAL
+  scmCheckoutRetryCount: 3
+  labelString: "master-label"
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "admin"
+            description: "Jenkins administrators"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "admin"
+          - name: "readonly"
+            description: "Read-only users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+              - "View/Read"
+            assignments:
+              - "readonly"
+    # globalMatrix:
+    #   grantedPermissions:
+    #     - "Overall/Read:anonymous"
+    #     - "Job/Read:anonymous"
+    #     - "View/Read:anonymous"
+    #     - "Overall/Administer:anonymous"
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: "#jbcrypt:$2a$09$YmDhi/3F6O1xp89Xng/XXucji/6A.fJ6WEl9Q.wX9kBOHy.FDWRh."
+        - id: readonly
+          password: "#jbcrypt:$2a$10$3bnAsorIxhl9kTYvNHa2hOJQwPzwT4bv9Vs.9KdXkh9ySANjJKm5u"
+
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/bin/git
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+        - usernamePassword:
+            scope: GLOBAL
+            id: "github-ssh"
+            username: "${GITHUB_USERNAME}"
+            password: "${GITHUB_PASSWORD}"
+            description: "Username/Password Credentials for github"
+
