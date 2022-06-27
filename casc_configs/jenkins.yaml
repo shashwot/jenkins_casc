@@ -1,10 +1,45 @@
 jenkins:
   systemMessage: "\n\n JENKINS Configuration as A Code !! \n\n"
 
+  views:
+  - all:
+      name: "all"
+  - list:
+      columns:
+      - "status"
+      - "jobName"
+      - "lastSuccess"
+      - "lastFailure"
+      - "lastDuration"
+      - "buildButton"
+      name: "develop"
+      includeRegex: ".*develop.*"
+  - list:
+      columns:
+      - "status"
+      - "jobName"
+      - "lastSuccess"
+      - "lastFailure"
+      - "lastDuration"
+      - "buildButton"
+      name: "stage"
+      includeRegex: ".*stage.*"
+  - list:
+      columns:
+      - "status"
+      - "jobName"
+      - "lastSuccess"
+      - "lastFailure"
+      - "lastDuration"
+      - "buildButton"
+      name: "prod"
+      includeRegex: ".*prod.*"
+  viewsTabBar: "standard"
+
   numExecutors: 1
   mode: NORMAL
   scmCheckoutRetryCount: 3
-  labelString: "master-label"
+  labelString: "master"
 
   authorizationStrategy:
     roleBased:

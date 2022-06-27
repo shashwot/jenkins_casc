@@ -1,0 +1,54 @@
+jobs:
+  - script: |
+      pipelineJob('develop-go-assignment') {
+          definition {
+              cpsScm {
+                  scm {
+                      git {
+                        remote { 
+                            url ('https://github.com/shashwot/go-assignment.git') 
+                            credentials('github-ssh')
+                        }
+                        branches('develop')
+                        scriptPath('dev.Jenkinsfile')
+                      }
+                  }
+              }
+          }
+      }
+
+  - script: |
+      pipelineJob('stage-go-assignment') {
+          definition {
+              cpsScm {
+                  scm {
+                      git {
+                        remote { 
+                            url ('https://github.com/shashwot/go-assignment.git') 
+                            credentials('github-ssh')
+                        }
+                        branches('stage')
+                        scriptPath('stage.Jenkinsfile')
+                      }
+                  }
+              }
+          }
+      }
+      
+  - script: |
+      pipelineJob('prod-go-assignment') {
+          definition {
+              cpsScm {
+                  scm {
+                      git {
+                        remote { 
+                            url ('https://github.com/shashwot/go-assignment.git') 
+                            credentials('github-ssh')
+                        }
+                        branches('main')
+                        scriptPath('prod.Jenkinsfile')
+                      }
+                  }
+              }
+          }
+      }
