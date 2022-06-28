@@ -102,3 +102,7 @@ credentials:
             id: "snyk-auth"
             secret: "${SNYK_TOKEN}"
             description: "Token Credentials for Snyk"
+
+security:
+  GlobalJobDslSecurityConfiguration:
+    useScriptSecurity: false
