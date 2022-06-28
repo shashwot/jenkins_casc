@@ -1,4 +1,4 @@
-job('SECURITY-SAST') {
+job('SECURITY-SAST-SNYK') {
   steps {
     shell('''
       cd "\${WORKSPACE}"
