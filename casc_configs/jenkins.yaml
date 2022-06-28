@@ -87,7 +87,7 @@ credentials:
       - credentials:
         - usernamePassword:
             scope: GLOBAL
-            id: "github-ssh"
+            id: "github_ssh"
             username: "${GITHUB_USERNAME}"
             password: "${GITHUB_PASSWORD}"
             description: "Username/Password Credentials for github"

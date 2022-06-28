@@ -5,7 +5,15 @@ pipelineJob('SECURITY-SONARQUBE') {
               pipeline {
                 agent any
                 stages {
-                    stage ('test') {
+                    stage('Initialize') {
+                        steps {
+                            script {
+                                properties([
+                                buildDiscarder(logRotator(daysToKeepStr: '5', numToKeepStr: '5'))])
+                            }
+                        }
+                    }
+                    stage ('SONAR') {
                         steps {
                             sh '''
                                 # npm run sonar
