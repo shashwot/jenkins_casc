@@ -91,4 +91,14 @@ credentials:
             username: "${GITHUB_USERNAME}"
             password: "${GITHUB_PASSWORD}"
             description: "Username/Password Credentials for github"
-
+        - usernamePassword:
+            scope: GLOBAL
+            id: "dockerhub"
+            username: "${DOCKERHUB_USERNAME}"
+            password: "${DOCKERHUB_PASSWORD}"
+            description: "Username/Password Credentials for dockerhub"
+        - string:
+            scope: GLOBAL
+            id: "snyk-auth"
+            secret: "${SNYK_TOKEN}"
+            description: "Token Credentials for Snyk"

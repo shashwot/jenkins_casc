@@ -17,3 +17,6 @@ role-strategy:latest
 publish-over-ssh:latest
 job-dsl:latest
 ssh:latest
+docker-workflow:latest
+snyk-security-scanner:latest
+htmlpublisher:latest

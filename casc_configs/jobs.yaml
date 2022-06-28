@@ -1,39 +1,22 @@
 jobs:
-  - script: |
-      pipelineJob('develop-go-assignment') {
-          definition {
-              cpsScm {
-                  scm {
-                      git {
-                        remote { 
-                            url ('https://github.com/shashwot/go-assignment.git') 
-                            credentials('github-ssh')
-                        }
-                        branches('develop')
-                        scriptPath('dev.Jenkinsfile')
-                      }
-                  }
-              }
-          }
-      }
+  - script: >
+        job('SECURITY') {
+            scm {
+                git {
+                    remote {
+                        url ('https://github.com/shashwot/jenkins_casc.git')
+                        credentials('github-ssh')
+                    }
+                }
+            }
 
-  - script: |
-      pipelineJob('stage-go-assignment') {
-          definition {
-              cpsScm {
-                  scm {
-                      git {
-                        remote { 
-                            url ('https://github.com/shashwot/go-assignment.git') 
-                            credentials('github-ssh')
-                        }
-                        branches('stage')
-                        scriptPath('stage.Jenkinsfile')
-                      }
-                  }
-              }
-          }
-      }
+            steps {
+                dsl {
+                    external('jobdsl/**/*.groovy')
+                    removeAction('DELETE')
+                }
+            }
+        }
       
   - script: |
       pipelineJob('prod-go-assignment') {
@@ -46,7 +29,7 @@ jobs:
                             credentials('github-ssh')
                         }
                         branches('main')
-                        scriptPath('prod.Jenkinsfile')
+                        scriptPath('Jenkinsfile')
                       }
                   }
               }
