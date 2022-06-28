@@ -30,6 +30,14 @@ job('SECURITY-SAST-SNYK') {
             }
         }
         }
+    scm {
+      git {
+          remote {
+              url ('https://github.com/shashwot/go-assignment.git')
+              credentials('github_ssh')
+          }
+      }
+    }
   steps {
     shell('''cd ${WORKSPACE}
 SNYK_TOKEN="${snyk_auth}" snyk test 
