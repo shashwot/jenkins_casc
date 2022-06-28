@@ -22,8 +22,8 @@ jenkins:
       - "lastFailure"
       - "lastDuration"
       - "buildButton"
-      name: "stage"
-      includeRegex: ".*stage.*"
+      name: "security"
+      includeRegex: ".*SECURITY.*"
   - list:
       columns:
       - "status"
@@ -36,7 +36,7 @@ jenkins:
       includeRegex: ".*prod.*"
   viewsTabBar: "standard"
 
-  numExecutors: 1
+  numExecutors: 2
   mode: NORMAL
   scmCheckoutRetryCount: 3
   labelString: "master"
@@ -99,10 +99,10 @@ credentials:
             description: "Username/Password Credentials for dockerhub"
         - string:
             scope: GLOBAL
-            id: "snyk-auth"
+            id: "snyk_auth"
             secret: "${SNYK_TOKEN}"
             description: "Token Credentials for Snyk"
 
 security:
-  GlobalJobDslSecurityConfiguration:
+  globaljobdslsecurityconfiguration:
     useScriptSecurity: false

@@ -7,12 +7,12 @@ pipelineJob('SECURITY-SAST-SNYK') {
                 stages {
                     stage ('test') {
                         steps {
-                            withCredentials([string(credentialsId: 'snyk-auth', variable: 'snyk-auth')]) {
+                            withCredentials([string(credentialsId: 'snyk_auth', variable: 'snyk_auth')]) {
                                 sh '''
                                     cd "\${WORKSPACE}"
-                                    SNYK_TOKEN="\${snyk-auth}" snyk test 
-                                    SNYK_TOKEN="\${snyk-auth}" snyk monitor
-                                    SNYK_TOKEN="\${snyk-auth}" snyk test --json
+                                    SNYK_TOKEN="\${snyk_auth}" snyk test 
+                                    SNYK_TOKEN="\${snyk_auth}" snyk monitor
+                                    SNYK_TOKEN="\${snyk_auth}" snyk test --json
                                 '''
                             }
                         }
