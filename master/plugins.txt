@@ -20,3 +20,4 @@ ssh:latest
 docker-workflow:latest
 snyk-security-scanner:latest
 htmlpublisher:latest
+golang:latest

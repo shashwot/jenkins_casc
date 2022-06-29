@@ -3,6 +3,7 @@ job('SECURITY-SAST-SNYK') {
         credentialsBinding {
             string('snyk_auth', 'snyk_auth')
         }
+        golang('go_lang')
         preBuildCleanup { // Clean before build
             includePattern('**/target/**')
             deleteDirectories()

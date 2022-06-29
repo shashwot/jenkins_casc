@@ -80,6 +80,11 @@ tool:
     installations:
       - name: git
         home: /usr/bin/git
+  
+  go:
+    installations:
+      - name: go_lang
+        home: "/usr/bin/go"
 
 credentials:
   system:
