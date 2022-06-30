@@ -10,6 +10,8 @@ services:
     volumes:
       - jenkins:/var/jenkins_home
       - ./casc_configs:/var/jenkins_home/jenkins_conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins_conf
     env_file:

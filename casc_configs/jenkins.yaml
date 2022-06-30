@@ -84,7 +84,21 @@ tool:
   go:
     installations:
       - name: go_lang
-        home: "/usr/bin/go"
+        properties:
+          - installSource:
+              installers:
+                - golangInstaller:
+                    id: "1.18.3"
+
+  # docker:
+  #   installations:
+  #     - name: docker
+  #       properties:
+  #         - installSource:
+  #             installers:
+  #               - docker:
+  #                   id: "latest"
+
 
 credentials:
   system:
