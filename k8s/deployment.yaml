@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      volumes:
+        - name: pvc-jenkins
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+        - name: jenkins-cm
+          configMap:
+            name: jenkins-cm
+      containers:
+      - name: jenkins
+        image: "localhost:5005/jenkins:latest"
+        imagePullPolicy: Always
+        env:
+        - name: CASC_JENKINS_CONFIG
+          value: /var/jenkins_home/jenkins_conf
+        envFrom:
+        - secretRef:
+            name: jenkins-secret
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - mountPath: "/var/jenkins_home/"
+            name: pvc-jenkins 
+          - name: jenkins-cm
+            mountPath: /var/jenkins_home/jenkins_conf/jenkins.yaml
+            subPath: jenkins.yaml
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000 
+        resources:
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+        livenessProbe:
+          httpGet:
+            path: "/login"
+            port: 8080
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: "/login"
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
