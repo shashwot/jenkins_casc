@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-cm
+  namespace: jenkins
+data:
+  jenkins.yaml: |
+    jenkins:
+      systemMessage: "\n\n JENKINS Configuration as A Code !! \n\n"
+
+      views:
+      - all:
+          name: "all"
+      - list:
+          columns:
+          - "status"
+          - "jobName"
+          - "lastSuccess"
+          - "lastFailure"
+          - "lastDuration"
+          - "buildButton"
+          name: "develop"
+          includeRegex: ".*develop.*"
+      - list:
+          columns:
+          - "status"
+          - "jobName"
+          - "lastSuccess"
+          - "lastFailure"
+          - "lastDuration"
+          - "buildButton"
+          name: "security"
+          includeRegex: ".*SECURITY.*"
+      - list:
+          columns:
+          - "status"
+          - "jobName"
+          - "lastSuccess"
+          - "lastFailure"
+          - "lastDuration"
+          - "buildButton"
+          name: "prod"
+          includeRegex: ".*prod.*"
+      viewsTabBar: "standard"
+
+      numExecutors: 2
+      mode: NORMAL
+      scmCheckoutRetryCount: 3
+      labelString: "master"
+
+      authorizationStrategy:
+        roleBased:
+          roles:
+            global:
+              - name: "admin"
+                description: "Jenkins administrators"
+                permissions:
+                  - "Overall/Administer"
+                assignments:
+                  - "admin"
+              - name: "readonly"
+                description: "Read-only users"
+                permissions:
+                  - "Overall/Read"
+                  - "Job/Read"
+                  - "View/Read"
+                assignments:
+                  - "readonly"
+        # globalMatrix:
+        #   grantedPermissions:
+        #     - "Overall/Read:anonymous"
+        #     - "Job/Read:anonymous"
+        #     - "View/Read:anonymous"
+        #     - "Overall/Administer:anonymous"
+
+      securityRealm:
+        local:
+          allowsSignup: false
+          users:
+            - id: admin
+              password: "#jbcrypt:$2a$09$YmDhi/3F6O1xp89Xng/XXucji/6A.fJ6WEl9Q.wX9kBOHy.FDWRh."
+            - id: readonly
+              password: "#jbcrypt:$2a$10$3bnAsorIxhl9kTYvNHa2hOJQwPzwT4bv9Vs.9KdXkh9ySANjJKm5u"
+
+    tool:
+      git:
+        installations:
+          - name: git
+            home: /usr/bin/git
+      
+      go:
+        installations:
+          - name: go_lang
+            properties:
+              - installSource:
+                  installers:
+                    - golangInstaller:
+                        id: "1.18.3"
+
+      # docker:
+      #   installations:
+      #     - name: docker
+      #       properties:
+      #         - installSource:
+      #             installers:
+      #               - docker:
+      #                   id: "latest"
+
+
+    credentials:
+      system:
+        domainCredentials:
+          - credentials:
+            - usernamePassword:
+                scope: GLOBAL
+                id: "github_ssh"
+                username: "${GITHUB_USERNAME}"
+                password: "${GITHUB_PASSWORD}"
+                description: "Username/Password Credentials for github"
+            - usernamePassword:
+                scope: GLOBAL
+                id: "dockerhub"
+                username: "${DOCKERHUB_USERNAME}"
+                password: "${DOCKERHUB_PASSWORD}"
+                description: "Username/Password Credentials for dockerhub"
+            - string:
+                scope: GLOBAL
+                id: "snyk_auth"
+                secret: "${SNYK_TOKEN}"
+                description: "Token Credentials for Snyk"
+
+    security:
+      globaljobdslsecurityconfiguration:
+        useScriptSecurity: false
