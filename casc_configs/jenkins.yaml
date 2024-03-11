@@ -1,42 +1,32 @@
 jenkins:
-  systemMessage: "\n\n JENKINS Configuration as A Code !! \n\n"
+  systemMessage: "\n\n Jenkins Configuration as A Code !! \n\n"
 
   views:
-  - all:
-      name: "all"
-  - list:
-      columns:
-      - "status"
-      - "jobName"
-      - "lastSuccess"
-      - "lastFailure"
-      - "lastDuration"
-      - "buildButton"
-      name: "develop"
-      includeRegex: ".*develop.*"
-  - list:
-      columns:
-      - "status"
-      - "jobName"
-      - "lastSuccess"
-      - "lastFailure"
-      - "lastDuration"
-      - "buildButton"
-      name: "security"
-      includeRegex: ".*SECURITY.*"
-  - list:
-      columns:
-      - "status"
-      - "jobName"
-      - "lastSuccess"
-      - "lastFailure"
-      - "lastDuration"
-      - "buildButton"
-      name: "prod"
-      includeRegex: ".*prod.*"
+    - all:
+        name: "all"
+    - list:
+        columns:
+          - "status"
+          - "jobName"
+          - "lastSuccess"
+          - "lastFailure"
+          - "lastDuration"
+          - "buildButton"
+        name: "prod"
+        includeRegex: ".*prod.*"
+    - list:
+        columns:
+          - "status"
+          - "jobName"
+          - "lastSuccess"
+          - "lastFailure"
+          - "lastDuration"
+          - "buildButton"
+        name: "stage"
+        includeRegex: ".*stage.*"
   viewsTabBar: "standard"
 
-  numExecutors: 2
+  numExecutors: 3
   mode: NORMAL
   scmCheckoutRetryCount: 3
   labelString: "master"
@@ -49,16 +39,16 @@ jenkins:
             description: "Jenkins administrators"
             permissions:
               - "Overall/Administer"
-            assignments:
-              - "admin"
+            entries:
+              - user: "admin"
           - name: "readonly"
             description: "Read-only users"
             permissions:
               - "Overall/Read"
               - "Job/Read"
               - "View/Read"
-            assignments:
-              - "readonly"
+            entries:
+              - user: "readonly"
     # globalMatrix:
     #   grantedPermissions:
     #     - "Overall/Read:anonymous"
@@ -71,56 +61,102 @@ jenkins:
       allowsSignup: false
       users:
         - id: admin
-          password: "#jbcrypt:$2a$09$YmDhi/3F6O1xp89Xng/XXucji/6A.fJ6WEl9Q.wX9kBOHy.FDWRh."
+          password: "#jbcrypt:$2a$12$MJmo7Rgsw4YKcO81JuZ79.qZ85tSq83gsV7VuHi2pNQF1r7Jxnfo."
         - id: readonly
-          password: "#jbcrypt:$2a$10$3bnAsorIxhl9kTYvNHa2hOJQwPzwT4bv9Vs.9KdXkh9ySANjJKm5u"
+          password: "#jbcrypt:$2a$12$MJmo7Rgsw4YKcO81JuZ79.qZ85tSq83gsV7VuHi2pNQF1r7Jxnfo."
 
 tool:
   git:
     installations:
       - name: git
         home: /usr/bin/git
-  
-  go:
+
+  nodejs:
     installations:
-      - name: go_lang
+      - name: "NodeJS"
+        home: "" #required until nodejs-1.3.4 release (JENKINS-57508)
         properties:
           - installSource:
               installers:
-                - golangInstaller:
-                    id: "1.18.3"
+                - nodeJSInstaller:
+                    id: "14.19.0"
+                    npmPackagesRefreshHours: 48
 
-  # docker:
-  #   installations:
-  #     - name: docker
-  #       properties:
-  #         - installSource:
-  #             installers:
-  #               - docker:
-  #                   id: "latest"
+      - name: "NodeJS16"
+        home: ""
+        properties:
+          - installSource:
+              installers:
+                - nodeJSInstaller:
+                    id: "16.20.2"
+                    npmPackagesRefreshHours: 48
 
+  sonarRunnerInstallation:
+    installations:
+      - name: "sonarQube"
+        properties:
+          - installSource:
+              installers:
+                - sonarRunnerInstaller:
+                    id: "4.8.0.2856"
+
+unclassified:
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+      - credentialsId: "sonar-token"
+        name: "sonarQube"
+        serverUrl: "https://sonar.jenkins.com"
+        triggers:
+          skipScmCause: false
+          skipUpstreamCause: false
+
+  gitHubPluginConfig:
+    configs:
+      - credentialsId: "github_server_ssh"
+        manageHooks: true
+        name: "Github_Server"
+    hookUrl: "https://jenkins.jenkins.com/github-webhook/"
 
 credentials:
   system:
     domainCredentials:
       - credentials:
-        - usernamePassword:
-            scope: GLOBAL
-            id: "github_ssh"
-            username: "${GITHUB_USERNAME}"
-            password: "${GITHUB_PASSWORD}"
-            description: "Username/Password Credentials for github"
-        - usernamePassword:
-            scope: GLOBAL
-            id: "dockerhub"
-            username: "${DOCKERHUB_USERNAME}"
-            password: "${DOCKERHUB_PASSWORD}"
-            description: "Username/Password Credentials for dockerhub"
-        - string:
-            scope: GLOBAL
-            id: "snyk_auth"
-            secret: "${SNYK_TOKEN}"
-            description: "Token Credentials for Snyk"
+          - usernamePassword:
+              scope: GLOBAL
+              id: "github_ssh"
+              username: "${GITHUB_USERNAME}"
+              password: "${GITHUB_PASSWORD}"
+              description: "Username/Password Credentials for github"
+          - string:
+              scope: GLOBAL
+              id: "github_server_ssh"
+              secret: "${GITHUB_PASSWORD}"
+              description: "Username/Password Credentials for github"
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: jenkins-github
+              username: shashwot
+              passphrase: ""
+              description: "jenkins-github"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:${SSH_PRIVATE_FILE_PATH}}" # Path to file loaded from Environment Variable
+          - string:
+              scope: GLOBAL
+              id: "docker-hub-password"
+              secret: "${DOCKERHUB_PASSWORD}"
+              description: "Password Credentials for dockerhub"
+          - string:
+              scope: GLOBAL
+              id: "docker-hub-username"
+              secret: "${DOCKERHUB_USERNAME}"
+              description: "DockerHub Username"
+          - string:
+              scope: GLOBAL
+              id: "sonar-token"
+              secret: "${SONAR_TOKEN}"
+              description: "Sonar Token"
 
 security:
   globaljobdslsecurityconfiguration:

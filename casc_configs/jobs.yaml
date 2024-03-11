@@ -19,7 +19,7 @@ jobs:
         }
       
   - script: |
-      pipelineJob('prod-go-assignment') {
+      pipelineJob('iims-task') {
           definition {
               cpsScm {
                   scm {

@@ -20,5 +20,7 @@ ssh:latest
 docker-workflow:latest
 snyk-security-scanner:latest
 htmlpublisher:latest
-golang:latest
-kubernetes:latest
+sonar:latest
+blueocean:latest
+nodejs:latest
+dependency-check-jenkins-plugin:latest

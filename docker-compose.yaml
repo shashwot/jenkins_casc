@@ -1,17 +1,18 @@
 version: '3.3'
 services:
-  jenkins: 
-    build: 
+  jenkins:
+    platform: linux/amd64
+    build:
       context: ./master
     container_name: jenkins
-    ports: 
+    ports:
       - 8080:8080
       - 50000:50000
     volumes:
       - jenkins:/var/jenkins_home
       - ./casc_configs:/var/jenkins_home/jenkins_conf
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
+        #- /usr/bin/docker:/usr/bin/docker
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins_conf
     env_file:
